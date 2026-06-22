@@ -507,7 +507,12 @@
     <button class="sheet-close" id="sheetClose" aria-label="Close">✕</button>
   </div>
   <div class="sheet-body">
-    <input class="sheet-input" id="latinInput" type="text" placeholder="Type IAST here... e.g. namaḥ → na ma ḥ" spellcheck="false" autocomplete="off" autofocus>
+    <form id="translitForm" style="display:contents">
+    <div style="display:flex;gap:8px;align-items:stretch">
+    <input class="sheet-input" id="latinInput" type="text" placeholder="Type IAST here... e.g. namaḥ → na ma ḥ" spellcheck="false" autocomplete="off" style="margin-bottom:0;flex:1">
+    <button type="submit" style="background:var(--accent-dim);border:none;border-radius:var(--radius);color:#fff;padding:0 14px;font-size:0.85rem;cursor:pointer;flex-shrink:0;white-space:nowrap">Insert</button>
+    </div>
+    </form>
     <div id="brahmiPreview" style="font-family:var(--script-font);font-size:1.3rem;padding:4px 0 12px;color:var(--accent);min-height:2rem;word-break:break-all"></div>
     <p class="sheet-hint">Press <kbd>Enter</kbd> to insert into output</p>
     <table class="sheet-table">
@@ -976,7 +981,7 @@ function transliterate(text) {
   function openSheet() {
     overlay.classList.add('open');
     sheet.classList.add('open');
-    requestAnimationFrame(() => input.focus());
+    setTimeout(() => input.focus(), 50);
   }
   function closeSheet() {
     overlay.classList.remove('open');
@@ -984,7 +989,10 @@ function transliterate(text) {
     input.value = '';
   }
 
-  openBtn.addEventListener('click', openSheet);
+  openBtn.addEventListener('click', e => {
+    e.preventDefault();
+    openSheet();
+  });
   closeBtn.addEventListener('click', closeSheet);
   overlay.addEventListener('click', closeSheet);
   document.addEventListener('keydown', e => {
@@ -993,27 +1001,27 @@ function transliterate(text) {
 
   // Transliterate on input — show preview
   input.addEventListener('input', () => {
-    document.getElementById('brahmiPreview').textContent = transliterate(input.value);
+    const val = input.value.toLowerCase();
+    const result = transliterate(val);
+    document.getElementById('brahmiPreview').textContent = val ? (result) : '';
   });
 
-  // Enter commits to main output
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const brahmi = transliterate(input.value);
-      if (brahmi) {
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const before = textarea.value.substring(0, start);
-        const after = textarea.value.substring(end);
-        history.push({ pos: start, len: end - start, val: textarea.value });
-        textarea.value = before + brahmi + after;
-        const newPos = start + brahmi.length;
-        textarea.selectionStart = textarea.selectionEnd = newPos;
-      }
-      input.value = '';
-      document.getElementById('brahmiPreview').textContent = '';
+  // Form submit (Enter) commits to main output
+  document.getElementById('translitForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const brahmi = transliterate(input.value.toLowerCase());
+    if (brahmi) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const before = textarea.value.substring(0, start);
+      const after = textarea.value.substring(end);
+      history.push({ pos: start, len: end - start, val: textarea.value });
+      textarea.value = before + brahmi + after;
+      const newPos = start + brahmi.length;
+      textarea.selectionStart = textarea.selectionEnd = newPos;
     }
+    input.value = '';
+    document.getElementById('brahmiPreview').textContent = '';
   });
 })();
 
