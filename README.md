@@ -86,7 +86,7 @@ docker compose down
 docker compose up -d --build
 ```
 
-The container runs nginx:alpine on port **8082**. Edit `docker-compose.yml` to change the port.
+The container runs busybox httpd on port **8082**. Edit `docker-compose.yml` to change the port.
 
 ---
 

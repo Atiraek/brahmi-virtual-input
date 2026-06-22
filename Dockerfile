@@ -1,4 +1,4 @@
-FROM nginx:alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY . /usr/share/nginx/html
+FROM busybox
+COPY . /www
 EXPOSE 80
+CMD ["httpd", "-f", "-p", "80", "-h", "/www"]
