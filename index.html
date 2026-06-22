@@ -142,6 +142,7 @@
     display: flex;
     gap: var(--key-gap);
     justify-content: center;
+    flex-wrap: wrap;
   }
   .key {
     background: var(--key);
@@ -199,11 +200,14 @@
 
   /* Responsive */
   @media (max-width: 500px) {
-    body { padding: 10px 6px 20px; }
+    body { padding: 10px 10px 20px; }
     .key { font-size: 1.1rem; min-width: 34px; padding: 9px 0; }
     .key.special, .key.backspace { font-size: 0.7rem; }
     .output-area textarea { font-size: 1.2rem; }
     .row-label { font-size: 0.55rem; }
+  }
+  @media (max-width: 380px) {
+    .key { font-size: 1rem; min-width: 30px; padding: 8px 0; }
   }
   @media (min-width: 600px) {
     .key { font-size: 1.5rem; min-width: 50px; padding: 12px 0; }
@@ -234,7 +238,7 @@
 
   <!-- Output -->
   <div class="output-area">
-    <textarea id="textOut" placeholder="Type in Brahmi..." spellcheck="false" dir="ltr"></textarea>
+    <textarea id="textOut" placeholder="Type in Brahmi..." spellcheck="false" dir="ltr" readonly inputmode="none"></textarea>
     <div class="toolbar">
       <button onclick="clearText()">✕ Clear</button>
       <button class="copy-btn" onclick="copyText()">📋 Copy</button>
@@ -267,11 +271,23 @@ const ROWS = [
     { c: '\uD804\uDC08' },  // 𑀈 Ī
     { c: '\uD804\uDC09' },  // 𑀉 U
     { c: '\uD804\uDC0A' },  // 𑀊 Ū
-    { c: '\uD804\uDC0B' },  // 𑀋 ? (vocalic)
+    { c: '\uD804\uDC0B' },  // 𑀋 ṛ
+    { c: '\uD804\uDC0C' },  // 𑀌 ṝ
+    { c: '\uD804\uDC0D' },  // 𑀍 ḷ
+    { c: '\uD804\uDC0E' },  // 𑀎 ḹ
     { c: '\uD804\uDC0F' },  // 𑀏 E
     { c: '\uD804\uDC10' },  // 𑀐 AI
     { c: '\uD804\uDC11' },  // 𑀑 O
     { c: '\uD804\uDC12' },  // 𑀒 AU
+  ]},
+  { label: 'Vowel Signs', keys: [
+    { c: '\uD804\uDC38' },  // 𑀸 ā sign
+    { c: '\uD804\uDC39' },  // 𑀹 i sign
+    { c: '\uD804\uDC3A' },  // 𑀺 ī sign
+    { c: '\uD804\uDC3B' },  // 𑀻 u sign
+    { c: '\uD804\uDC3C' },  // 𑀼 ū sign
+    { c: '\uD804\uDC3D' },  // 𑀽 r̥ sign
+    { c: '\uD804\uDC3E' },  // 𑀾 r̥̄ sign
   ]},
   { label: 'Velar (Ka-varga)', keys: [
     { c: '\uD804\uDC13' },  // 𑀓 ka
@@ -325,11 +341,29 @@ const ROWS = [
     { c: '\uD804\uDC37' },  // 𑀷 ṛha
   ]},
   { label: 'Diacritics & Signs', keys: [
-    { c: '\uD804\uDC00' },  // 𑀀 length mark
-    { c: '\uD804\uDC01' },  // 𑀁 anusvara
+    { c: '\uD804\uDC00' },  // 𑀀 candrabindu
+    { c: '\uD804\uDC01' },  // 𑀁 anusvāra
     { c: '\uD804\uDC02' },  // 𑀂 visarga
-    { c: '\uD804\uDC03' },  // 𑀃 candrabindu
+    { c: '\uD804\uDC03' },  // 𑀃 jihvāmūlīya
+    { c: '\uD804\uDC04' },  // 𑀄 upadhmānīya
     { c: '\uD804\uDC3F' },  // 𑀿 virama (halant)
+    { c: '\uD804\uDC40' },  // 𑁀 virama alt
+  ]},
+  { label: 'Digits', keys: [
+    { c: '\uD804\uDC66' },  // 𑁦 0
+    { c: '\uD804\uDC67' },  // 𑁧 1
+    { c: '\uD804\uDC68' },  // 𑁨 2
+    { c: '\uD804\uDC69' },  // 𑁩 3
+    { c: '\uD804\uDC6A' },  // 𑁪 4
+    { c: '\uD804\uDC6B' },  // 𑁫 5
+    { c: '\uD804\uDC6C' },  // 𑁬 6
+    { c: '\uD804\uDC6D' },  // 𑁭 7
+    { c: '\uD804\uDC6E' },  // 𑁮 8
+    { c: '\uD804\uDC6F' },  // 𑁯 9
+  ]},
+  { label: 'Punctuation', keys: [
+    { c: '\uD804\uDC47' },  // 𑁇 danda
+    { c: '\uD804\uDC48' },  // 𑁈 double danda
   ]},
 ];
 
@@ -408,7 +442,6 @@ function typeChar(c) {
   textarea.value = before + c + after;
   const newPos = start + c.length;
   textarea.selectionStart = textarea.selectionEnd = newPos;
-  textarea.focus();
 }
 
 function backspace() {
@@ -425,14 +458,12 @@ function backspace() {
     textarea.value = textarea.value.substring(0, cp) + textarea.value.substring(start);
     textarea.selectionStart = textarea.selectionEnd = cp;
   }
-  textarea.focus();
 }
 
 function clearText() {
   if (!textarea.value) return;
   history.push({ pos: 0, len: textarea.value.length, val: textarea.value });
   textarea.value = '';
-  textarea.focus();
 }
 
 function undoLast() {
@@ -440,7 +471,6 @@ function undoLast() {
   if (entry) {
     textarea.value = entry.val;
     textarea.selectionStart = textarea.selectionEnd = entry.pos;
-    textarea.focus();
   }
 }
 
