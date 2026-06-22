@@ -274,6 +274,188 @@
     opacity: 0.6;
   }
   .font-warning a { color: var(--accent-dim); }
+
+  /* ── Type button (full-width callout) ───────────────── */
+  .type-callout {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin: 10px 0 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    width: 100%;
+    text-align: left;
+  }
+  .type-callout:hover {
+    background: var(--key-hover);
+    border-color: var(--accent-dim);
+  }
+  .type-callout:active {
+    background: var(--key-active);
+  }
+  .type-callout-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .type-callout-text { flex: 1; }
+  .type-callout-text strong {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .type-callout-text span {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+  }
+  .type-callout-arrow {
+    font-size: 1.1rem;
+    color: var(--accent-dim);
+    flex-shrink: 0;
+  }
+
+  /* ── Bottom sheet ──────────────────────────────────── */
+  .sheet-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .sheet-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 60vh;
+    background: var(--surface);
+    border-radius: 16px 16px 0 0;
+    z-index: 201;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .sheet.open {
+    transform: translateY(0);
+  }
+  .sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 8px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .sheet-header h2 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .sheet-close {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    line-height: 1;
+  }
+  .sheet-close:hover { background: var(--key-hover); color: var(--text); }
+  .sheet-body {
+    padding: 12px 16px 24px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+  }
+  .sheet-input {
+    width: 100%;
+    background: var(--textarea-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: var(--font-stack);
+    font-size: 1.1rem;
+    outline: none;
+    margin-bottom: 14px;
+  }
+  .sheet-input:focus {
+    border-color: var(--accent);
+  }
+  .sheet-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+  }
+  .sheet-table th {
+    text-align: left;
+    color: var(--text-dim);
+    font-weight: 500;
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .sheet-table td {
+    padding: 5px 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .sheet-table td:first-child {
+    font-family: monospace;
+    font-weight: 500;
+    color: var(--accent);
+    width: 28%;
+  }
+  .sheet-table td:last-child {
+    font-family: var(--script-font);
+    font-size: 1rem;
+    text-align: right;
+    width: 28%;
+  }
+  .sheet-table tr:hover td {
+    background: var(--key);
+  }
+  .sheet-hint {
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: var(--key);
+    padding: 5px 10px;
+    border-radius: 6px;
+    margin: -6px 0 12px;
+    display: inline-block;
+    font-weight: 500;
+  }
+  .sheet-hint kbd {
+    background: var(--key-hover);
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-family: monospace;
+    border: 1px solid var(--border);
+  }
+  @media (max-height: 500px) {
+    .sheet { max-height: 75vh; }
+  }
+  @media (min-width: 600px) {
+    .sheet { max-width: 480px; left: 50%; transform: translateX(-50%) translateY(100%); border-radius: 16px 16px 0 0; }
+    .sheet.open { transform: translateX(-50%) translateY(0); }
+  }
 </style>
 </head>
 <body>
@@ -295,6 +477,16 @@
     </div>
   </div>
 
+  <!-- Type callout -->
+  <div class="type-callout" id="typeBtn" role="button" tabindex="0" aria-label="Open phonetic input">
+    <span class="type-callout-icon">⌨️</span>
+    <div class="type-callout-text">
+      <strong>Phonetic Input</strong>
+      <span>Type IAST — e.g. namaḥ → &#x11026;&#x1102B;&#x11002; — and press Enter to insert at cursor</span>
+    </div>
+    <span class="type-callout-arrow">→</span>
+  </div>
+
   <!-- Keyboard rows -->
   <div class="keyboard" id="keyboard">
     <!-- Generated by JS -->
@@ -306,6 +498,24 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- Bottom sheet -->
+<div class="sheet-overlay" id="sheetOverlay"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-header">
+    <h2>Type in Latin → Brahmi</h2>
+    <button class="sheet-close" id="sheetClose" aria-label="Close">✕</button>
+  </div>
+  <div class="sheet-body">
+    <input class="sheet-input" id="latinInput" type="text" placeholder="Type IAST here... e.g. namaḥ → na ma ḥ" spellcheck="false" autocomplete="off" autofocus>
+    <div id="brahmiPreview" style="font-family:var(--script-font);font-size:1.3rem;padding:4px 0 12px;color:var(--accent);min-height:2rem;word-break:break-all"></div>
+    <p class="sheet-hint">Press <kbd>Enter</kbd> to insert into output</p>
+    <table class="sheet-table">
+      <thead><tr><th>Latin</th><th>Brahmi</th><th>Notes</th></tr></thead>
+      <tbody id="refTableBody"></tbody>
+    </table>
+  </div>
+</div>
 
 <script>
 // ── Brahmi character map ─────────────────────────────────────────
@@ -583,6 +793,229 @@ function showToast(msg) {
   clearTimeout(t._hide);
   t._hide = setTimeout(() => t.classList.remove('show'), 1800);
 }
+
+// ── Phonetic transliteration (IAST → Brahmi) ─────────────────────
+// Brahmi is an abugida: each consonant has inherent 'a'. Vowel signs
+// attach to consonants. Consecutive consonants use virama (halant).
+
+const VIRAMA = '\uD804\uDC46';
+const BRAHMI = {
+  vowels: {
+    'a':  { ind: '\uD804\uDC05', sign: null },
+    'ā':  { ind: '\uD804\uDC06', sign: '\uD804\uDC38' },
+    'i':  { ind: '\uD804\uDC07', sign: '\uD804\uDC3A' },
+    'ī':  { ind: '\uD804\uDC08', sign: '\uD804\uDC3B' },
+    'u':  { ind: '\uD804\uDC09', sign: '\uD804\uDC3C' },
+    'ū':  { ind: '\uD804\uDC0A', sign: '\uD804\uDC3D' },
+    'e':  { ind: '\uD804\uDC0F', sign: '\uD804\uDC42' },
+    'ai': { ind: '\uD804\uDC10', sign: '\uD804\uDC43' },
+    'o':  { ind: '\uD804\uDC11', sign: '\uD804\uDC44' },
+    'au': { ind: '\uD804\uDC12', sign: '\uD804\uDC45' },
+    'ṛ':  { ind: '\uD804\uDC0B', sign: '\uD804\uDC3E' },
+    'ṝ':  { ind: '\uD804\uDC0C', sign: '\uD804\uDC3F' },
+  },
+  cons: {
+    'k': '\uD804\uDC13', 'kh': '\uD804\uDC14',
+    'g': '\uD804\uDC15', 'gh': '\uD804\uDC16',
+    'ṅ': '\uD804\uDC17',
+    'c': '\uD804\uDC18', 'ch': '\uD804\uDC19',
+    'j': '\uD804\uDC1A', 'jh': '\uD804\uDC1B',
+    'ñ': '\uD804\uDC1C',
+    'ṭ': '\uD804\uDC1D', 'ṭh': '\uD804\uDC1E',
+    'ḍ': '\uD804\uDC1F', 'ḍh': '\uD804\uDC20',
+    'ṇ': '\uD804\uDC21',
+    't': '\uD804\uDC22', 'th': '\uD804\uDC23',
+    'd': '\uD804\uDC24', 'dh': '\uD804\uDC25',
+    'n': '\uD804\uDC26',
+    'p': '\uD804\uDC27', 'ph': '\uD804\uDC28',
+    'b': '\uD804\uDC29', 'bh': '\uD804\uDC2A',
+    'm': '\uD804\uDC2B',
+    'y': '\uD804\uDC2C', 'r': '\uD804\uDC2D',
+    'l': '\uD804\uDC2E', 'v': '\uD804\uDC2F',
+    'ś': '\uD804\uDC30', 'ṣ': '\uD804\uDC31',
+    's': '\uD804\uDC32', 'h': '\uD804\uDC33',
+    'ḷ': '\uD804\uDC34',
+  },
+  diac: {
+    'ṃ': '\uD804\uDC01',
+    'ḥ': '\uD804\uDC02',
+  },
+};
+
+// Build sorted key list for greedy matching (longest first)
+const ALL_KEYS = Object.keys(BRAHMI.vowels)
+  .concat(Object.keys(BRAHMI.cons))
+  .concat(Object.keys(BRAHMI.diac));
+ALL_KEYS.sort((a, b) => b.length - a.length);
+
+function scanToken(text, pos) {
+  for (const key of ALL_KEYS) {
+    if (text.slice(pos, pos + key.length) === key) {
+      if (key in BRAHMI.vowels) return { type: 'vowel', key };
+      if (key in BRAHMI.cons)   return { type: 'cons', key };
+      return { type: 'diac', key };
+    }
+  }
+  return null;
+}
+
+function transliterate(text) {
+  let result = '';
+  let i = 0;
+  let atWordStart = true;
+  let prevWasCons = false;
+
+  while (i < text.length) {
+    if (text[i] === ' ') {
+      result += ' ';
+      i++;
+      atWordStart = true;
+      prevWasCons = false;
+      continue;
+    }
+
+    const tok = scanToken(text, i);
+    if (!tok) { i++; continue; }
+
+    if (tok.type === 'vowel') {
+      const vd = BRAHMI.vowels[tok.key];
+      if (atWordStart || !prevWasCons) {
+        result += vd.ind;
+      } else if (vd.sign) {
+        result += vd.sign;
+      }
+      // 'a' has no vowel sign — inherent, output nothing
+      atWordStart = false;
+      prevWasCons = false;
+      i += tok.key.length;
+
+    } else if (tok.type === 'cons') {
+      const nextTok = scanToken(text, i + tok.key.length);
+      if (nextTok && nextTok.type === 'vowel' && nextTok.key === 'a') {
+        // Consonant + inherent 'a' → just the consonant letter
+        result += BRAHMI.cons[tok.key];
+        i += tok.key.length + nextTok.key.length;
+        atWordStart = false;
+        prevWasCons = false;
+      } else if (nextTok && nextTok.type === 'vowel') {
+        // Consonant + non-a vowel → output consonant, vowel sign handled next
+        result += BRAHMI.cons[tok.key];
+        i += tok.key.length;
+        prevWasCons = true;
+        atWordStart = false;
+      } else {
+        // Next is consonant, diacritic, or end → add virama
+        result += BRAHMI.cons[tok.key] + VIRAMA;
+        i += tok.key.length;
+        prevWasCons = true;
+        atWordStart = false;
+      }
+
+    } else if (tok.type === 'diac') {
+      result += BRAHMI.diac[tok.key];
+      i += tok.key.length;
+      prevWasCons = false;
+      atWordStart = false;
+    }
+  }
+
+  return result;
+}
+
+// ── Reference table ───────────────────────────────────────────────
+(function buildRefTable() {
+  const tbody = document.getElementById('refTableBody');
+  const vowels = ['a','ā','i','ī','u','ū','e','ai','o','au','ṛ','ṝ'];
+  const row = (key, brah, note) => {
+    const tr = document.createElement('tr');
+    const c1 = document.createElement('td'); c1.textContent = key;
+    const c2 = document.createElement('td'); c2.textContent = brah;
+    const c3 = document.createElement('td');
+    c3.textContent = note;
+    c3.style.color = 'var(--text-dim)';
+    c3.style.fontSize = '0.7rem';
+    tr.appendChild(c1); tr.appendChild(c2); tr.appendChild(c3);
+    return tr;
+  };
+  const section = (label) => {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.textContent = label;
+    td.colSpan = 3;
+    td.style.fontSize = '0.65rem';
+    td.style.textTransform = 'uppercase';
+    td.style.letterSpacing = '0.08em';
+    td.style.color = 'var(--accent-dim)';
+    td.style.paddingTop = '8px';
+    td.style.borderBottom = 'none';
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  };
+  section('Vowels');
+  for (const v of vowels) {
+    const d = BRAHMI.vowels[v];
+    tbody.appendChild(row(v, d.ind, v));
+  }
+  section('Consonants');
+  for (const [key, brah] of Object.entries(BRAHMI.cons)) {
+    tbody.appendChild(row(key, brah, key + 'a'));
+  }
+  section('Diacritics');
+  tbody.appendChild(row('ṃ', BRAHMI.diac['ṃ'], 'anusvāra'));
+  tbody.appendChild(row('ḥ', BRAHMI.diac['ḥ'], 'visarga'));
+})();
+
+// ── Bottom sheet logic ────────────────────────────────────────────
+(function initSheet() {
+  const overlay = document.getElementById('sheetOverlay');
+  const sheet = document.getElementById('sheet');
+  const openBtn = document.getElementById('typeBtn');
+  const closeBtn = document.getElementById('sheetClose');
+  const input = document.getElementById('latinInput');
+
+  function openSheet() {
+    overlay.classList.add('open');
+    sheet.classList.add('open');
+    requestAnimationFrame(() => input.focus());
+  }
+  function closeSheet() {
+    overlay.classList.remove('open');
+    sheet.classList.remove('open');
+    input.value = '';
+  }
+
+  openBtn.addEventListener('click', openSheet);
+  closeBtn.addEventListener('click', closeSheet);
+  overlay.addEventListener('click', closeSheet);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && sheet.classList.contains('open')) closeSheet();
+  });
+
+  // Transliterate on input — show preview
+  input.addEventListener('input', () => {
+    document.getElementById('brahmiPreview').textContent = transliterate(input.value);
+  });
+
+  // Enter commits to main output
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const brahmi = transliterate(input.value);
+      if (brahmi) {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const before = textarea.value.substring(0, start);
+        const after = textarea.value.substring(end);
+        history.push({ pos: start, len: end - start, val: textarea.value });
+        textarea.value = before + brahmi + after;
+        const newPos = start + brahmi.length;
+        textarea.selectionStart = textarea.selectionEnd = newPos;
+      }
+      input.value = '';
+      document.getElementById('brahmiPreview').textContent = '';
+    }
+  });
+})();
 
 // ── Theme toggle ──────────────────────────────────────────────────
 (function initTheme() {
