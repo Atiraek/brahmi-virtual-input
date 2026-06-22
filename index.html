@@ -271,23 +271,32 @@ const ROWS = [
     { c: '\uD804\uDC08' },  // 𑀈 Ī
     { c: '\uD804\uDC09' },  // 𑀉 U
     { c: '\uD804\uDC0A' },  // 𑀊 Ū
-    { c: '\uD804\uDC0B' },  // 𑀋 ṛ
-    { c: '\uD804\uDC0C' },  // 𑀌 ṝ
-    { c: '\uD804\uDC0D' },  // 𑀍 ḷ
-    { c: '\uD804\uDC0E' },  // 𑀎 ḹ
+    { c: '\uD804\uDC0B' },  // 𑀋 ṛ (vocalic R)
+    { c: '\uD804\uDC0C' },  // 𑀌 ṝ (vocalic RR)
+    { c: '\uD804\uDC0D' },  // 𑀍 ḷ (vocalic L)
+    { c: '\uD804\uDC0E' },  // 𑀎 ḹ (vocalic LL)
     { c: '\uD804\uDC0F' },  // 𑀏 E
     { c: '\uD804\uDC10' },  // 𑀐 AI
     { c: '\uD804\uDC11' },  // 𑀑 O
     { c: '\uD804\uDC12' },  // 𑀒 AU
   ]},
   { label: 'Vowel Signs', keys: [
-    { c: '\uD804\uDC38' },  // 𑀸 ā sign
-    { c: '\uD804\uDC39' },  // 𑀹 i sign
-    { c: '\uD804\uDC3A' },  // 𑀺 ī sign
-    { c: '\uD804\uDC3B' },  // 𑀻 u sign
-    { c: '\uD804\uDC3C' },  // 𑀼 ū sign
-    { c: '\uD804\uDC3D' },  // 𑀽 r̥ sign
-    { c: '\uD804\uDC3E' },  // 𑀾 r̥̄ sign
+    { c: '\uD804\uDC38' },  // 𑀸 AA
+    { c: '\uD804\uDC39' },  // 𑀹 Bhaṭṭiprolu AA
+    { c: '\uD804\uDC3A' },  // 𑀺 I
+    { c: '\uD804\uDC3B' },  // 𑀻 II
+    { c: '\uD804\uDC3C' },  // 𑀼 U
+    { c: '\uD804\uDC3D' },  // 𑀽 Ū
+    { c: '\uD804\uDC3E' },  // 𑀾 Vocalic R
+    { c: '\uD804\uDC3F' },  // 𑀿 Vocalic RR
+    { c: '\uD804\uDC40' },  // 𑁀 Vocalic L
+    { c: '\uD804\uDC41' },  // 𑁁 Vocalic LL
+    { c: '\uD804\uDC42' },  // 𑁂 E
+    { c: '\uD804\uDC43' },  // 𑁃 Ai
+    { c: '\uD804\uDC44' },  // 𑁄 O
+    { c: '\uD804\uDC45' },  // 𑁅 Au
+    { c: '\uD804\uDC73' },  // 𑁳 O.Tamil Short E
+    { c: '\uD804\uDC74' },  // 𑁴 O.Tamil Short O
   ]},
   { label: 'Velar (Ka-varga)', keys: [
     { c: '\uD804\uDC13' },  // 𑀓 ka
@@ -336,9 +345,12 @@ const ROWS = [
   ]},
   { label: 'Liquid & Rare', keys: [
     { c: '\uD804\uDC34' },  // 𑀴 ḷa
-    { c: '\uD804\uDC35' },  // 𑀵 ḷha
-    { c: '\uD804\uDC36' },  // 𑀶 ṛa
-    { c: '\uD804\uDC37' },  // 𑀷 ṛha
+    { c: '\uD804\uDC35' },  // 𑀵 ḷha (O.Tamil LLLA)
+    { c: '\uD804\uDC36' },  // 𑀶 ṛa (O.Tamil RRA)
+    { c: '\uD804\uDC37' },  // 𑀷 ṛha (O.Tamil NNNA)
+    { c: '\uD804\uDC71' },  // 𑁱 O.Tamil Short E
+    { c: '\uD804\uDC72' },  // 𑁲 O.Tamil Short O
+    { c: '\uD804\uDC75' },  // 𑁵 O.Tamil LLA
   ]},
   { label: 'Diacritics & Signs', keys: [
     { c: '\uD804\uDC00' },  // 𑀀 candrabindu
@@ -346,8 +358,8 @@ const ROWS = [
     { c: '\uD804\uDC02' },  // 𑀂 visarga
     { c: '\uD804\uDC03' },  // 𑀃 jihvāmūlīya
     { c: '\uD804\uDC04' },  // 𑀄 upadhmānīya
-    { c: '\uD804\uDC3F' },  // 𑀿 virama (halant)
-    { c: '\uD804\uDC40' },  // 𑁀 virama alt
+    { c: '\uD804\uDC46' },  // 𑁆 virama (halant)
+    { c: '\uD804\uDC70' },  // 𑁰 O.Tamil virama
   ]},
   { label: 'Digits', keys: [
     { c: '\uD804\uDC66' },  // 𑁦 0
@@ -361,9 +373,37 @@ const ROWS = [
     { c: '\uD804\uDC6E' },  // 𑁮 8
     { c: '\uD804\uDC6F' },  // 𑁯 9
   ]},
+  { label: 'Numbers', keys: [
+    { c: '\uD804\uDC52' },  // 𑁒 1
+    { c: '\uD804\uDC53' },  // 𑁓 2
+    { c: '\uD804\uDC54' },  // 𑁔 3
+    { c: '\uD804\uDC55' },  // 𑁕 4
+    { c: '\uD804\uDC56' },  // 𑁖 5
+    { c: '\uD804\uDC57' },  // 𑁗 6
+    { c: '\uD804\uDC58' },  // 𑁘 7
+    { c: '\uD804\uDC59' },  // 𑁙 8
+    { c: '\uD804\uDC5A' },  // 𑁚 9
+    { c: '\uD804\uDC5B' },  // 𑁛 10
+    { c: '\uD804\uDC5C' },  // 𑁜 20
+    { c: '\uD804\uDC5D' },  // 𑁝 30
+    { c: '\uD804\uDC5E' },  // 𑁞 40
+    { c: '\uD804\uDC5F' },  // 𑁟 50
+    { c: '\uD804\uDC60' },  // 𑁠 60
+    { c: '\uD804\uDC61' },  // 𑁡 70
+    { c: '\uD804\uDC62' },  // 𑁢 80
+    { c: '\uD804\uDC63' },  // 𑁣 90
+    { c: '\uD804\uDC64' },  // 𑁤 100
+    { c: '\uD804\uDC65' },  // 𑁥 1000
+  ]},
   { label: 'Punctuation', keys: [
     { c: '\uD804\uDC47' },  // 𑁇 danda
     { c: '\uD804\uDC48' },  // 𑁈 double danda
+    { c: '\uD804\uDC49' },  // 𑁉 dot
+    { c: '\uD804\uDC4A' },  // 𑁊 double dot
+    { c: '\uD804\uDC4B' },  // 𑁋 line
+    { c: '\uD804\uDC4C' },  // 𑁌 crescent bar
+    { c: '\uD804\uDC4D' },  // 𑁍 lotus
+    { c: '\uD804\uDC7F' },  // 𑁿 number joiner
   ]},
 ];
 
