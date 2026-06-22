@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>𑀩𑁆𑀭𑀸𑀳𑁆𑀫𑀻 𑀓𑀻𑀩𑁄𑀭𑁆𑀟 · Brahmi Keyboard</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0f0f14;
+    --surface: #1a1a24;
+    --key: #26263a;
+    --key-hover: #34345a;
+    --key-active: #4a4a7a;
+    --accent: #a78bfa;
+    --accent-dim: #7c6bc4;
+    --text: #e4e4ec;
+    --text-dim: #8888a0;
+    --textarea-bg: #14141e;
+    --radius: 10px;
+    --key-radius: 8px;
+    --key-gap: 4px;
+    --font-stack: 'Segoe UI', -apple-system, system-ui, sans-serif;
+    --script-font: 'Noto Sans Brahmi', 'Segoe UI Historic', 'Arial Unicode MS', 'FreeSerif', serif;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-stack);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 12px 32px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .container {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin: 12px 0 16px;
+  }
+  header h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+  }
+  header h1 .script {
+    font-family: var(--script-font);
+    font-size: 1.1em;
+  }
+  header p {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* Text area */
+  .output-area {
+    background: var(--textarea-bg);
+    border: 1px solid #2a2a3e;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    min-height: 90px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .output-area textarea {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: var(--script-font);
+    font-size: 1.5rem;
+    width: 100%;
+    min-height: 60px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+  .output-area textarea::placeholder {
+    color: var(--text-dim);
+    font-family: var(--font-stack);
+    font-size: 0.85rem;
+  }
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .toolbar button {
+    background: var(--surface);
+    border: 1px solid #2e2e44;
+    color: var(--text);
+    font-size: 0.8rem;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .toolbar button:hover { background: var(--key-hover); }
+  .toolbar button:active { background: var(--key-active); }
+  .toolbar .copy-btn {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .toolbar .copy-btn:hover { background: var(--accent); }
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #2a2a44;
+    color: var(--text);
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 100;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Keyboard */
+  .keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--key-gap);
+  }
+  .row {
+    display: flex;
+    gap: var(--key-gap);
+    justify-content: center;
+  }
+  .key {
+    background: var(--key);
+    color: var(--text);
+    font-family: var(--script-font);
+    font-size: 1.3rem;
+    padding: 10px 0;
+    min-width: 42px;
+    border-radius: var(--key-radius);
+    border: none;
+    cursor: pointer;
+    transition: background 0.1s, transform 0.08s;
+    flex: 0 1 auto;
+    text-align: center;
+    line-height: 1;
+    touch-action: manipulation;
+  }
+  .key:hover { background: var(--key-hover); }
+  .key:active, .key.pressed {
+    background: var(--key-active);
+    transform: scale(0.93);
+  }
+  .key.special {
+    font-family: var(--font-stack);
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    background: #1e1e2e;
+  }
+  .key.special:hover { background: var(--key-hover); }
+  .key.special:active { background: var(--key-active); }
+  .key.space {
+    flex: 3;
+    font-family: var(--font-stack);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .key.backspace {
+    min-width: 56px;
+    font-family: var(--font-stack);
+    font-size: 0.7rem;
+    color: #f87171;
+  }
+
+  /* Row labels */
+  .row-label {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-align: center;
+    padding: 6px 0 2px;
+    letter-spacing: 0.05em;
+    opacity: 0.5;
+  }
+
+  /* Responsive */
+  @media (max-width: 500px) {
+    body { padding: 10px 6px 20px; }
+    .key { font-size: 1.1rem; min-width: 34px; padding: 9px 0; }
+    .key.special, .key.backspace { font-size: 0.7rem; }
+    .output-area textarea { font-size: 1.2rem; }
+    .row-label { font-size: 0.55rem; }
+  }
+  @media (min-width: 600px) {
+    .key { font-size: 1.5rem; min-width: 50px; padding: 12px 0; }
+    .key.special { font-size: 0.85rem; }
+    .output-area textarea { font-size: 1.7rem; }
+  }
+  @media (min-width: 900px) {
+    .key { font-size: 1.6rem; min-width: 56px; padding: 14px 0; }
+  }
+
+  /* Font loading note */
+  .font-warning {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    padding: 8px 0 4px;
+    opacity: 0.6;
+  }
+  .font-warning a { color: var(--accent-dim); }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1><span class="script">𑀩𑁆𑀭𑀸𑀳𑁆𑀫𑀻</span> Keyboard</h1>
+    <p>Brahmi virtual keyboard — tap to type, copy to use anywhere</p>
+  </header>
+
+  <!-- Output -->
+  <div class="output-area">
+    <textarea id="textOut" placeholder="Type in Brahmi..." spellcheck="false" dir="ltr"></textarea>
+    <div class="toolbar">
+      <button onclick="clearText()">✕ Clear</button>
+      <button class="copy-btn" onclick="copyText()">📋 Copy</button>
+      <span style="flex:1"></span>
+      <button onclick="undoLast()">↩ Undo</button>
+    </div>
+  </div>
+
+  <!-- Keyboard rows -->
+  <div class="keyboard" id="keyboard">
+    <!-- Generated by JS -->
+  </div>
+
+  <div class="font-warning">
+    Glyphs render best with <a href="https://fonts.google.com/noto/specimen/Noto+Sans+Brahmi" target="_blank">Noto Sans Brahmi</a> installed
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Brahmi character map ─────────────────────────────────────────
+// Arranged in rows with labels. Each key: { c: character, l: label? }
+
+const ROWS = [
+  { label: 'Vowels', keys: [
+    { c: '\uD804\uDC05' },  // 𑀅 A
+    { c: '\uD804\uDC06' },  // 𑀆 Ā
+    { c: '\uD804\uDC07' },  // 𑀇 I
+    { c: '\uD804\uDC08' },  // 𑀈 Ī
+    { c: '\uD804\uDC09' },  // 𑀉 U
+    { c: '\uD804\uDC0A' },  // 𑀊 Ū
+    { c: '\uD804\uDC0B' },  // 𑀋 ? (vocalic)
+    { c: '\uD804\uDC0F' },  // 𑀏 E
+    { c: '\uD804\uDC10' },  // 𑀐 AI
+    { c: '\uD804\uDC11' },  // 𑀑 O
+    { c: '\uD804\uDC12' },  // 𑀒 AU
+  ]},
+  { label: 'Velar (Ka-varga)', keys: [
+    { c: '\uD804\uDC13' },  // 𑀓 ka
+    { c: '\uD804\uDC14' },  // 𑀔 kha
+    { c: '\uD804\uDC15' },  // 𑀕 ga
+    { c: '\uD804\uDC16' },  // 𑀖 gha
+    { c: '\uD804\uDC17' },  // 𑀗 ṅa
+  ]},
+  { label: 'Palatal (Ca-varga)', keys: [
+    { c: '\uD804\uDC18' },  // 𑀘 ca
+    { c: '\uD804\uDC19' },  // 𑀙 cha
+    { c: '\uD804\uDC1A' },  // 𑀚 ja
+    { c: '\uD804\uDC1B' },  // 𑀛 jha
+    { c: '\uD804\uDC1C' },  // 𑀜 ña
+  ]},
+  { label: 'Retroflex (Ṭa-varga)', keys: [
+    { c: '\uD804\uDC1D' },  // 𑀝 ṭa
+    { c: '\uD804\uDC1E' },  // 𑀞 ṭha
+    { c: '\uD804\uDC1F' },  // 𑀟 ḍa
+    { c: '\uD804\uDC20' },  // 𑀠 ḍha
+    { c: '\uD804\uDC21' },  // 𑀡 ṇa
+  ]},
+  { label: 'Dental (Ta-varga)', keys: [
+    { c: '\uD804\uDC22' },  // 𑀢 ta
+    { c: '\uD804\uDC23' },  // 𑀣 tha
+    { c: '\uD804\uDC24' },  // 𑀤 da
+    { c: '\uD804\uDC25' },  // 𑀥 dha
+    { c: '\uD804\uDC26' },  // 𑀦 na
+  ]},
+  { label: 'Labial (Pa-varga)', keys: [
+    { c: '\uD804\uDC27' },  // 𑀧 pa
+    { c: '\uD804\uDC28' },  // 𑀨 pha
+    { c: '\uD804\uDC29' },  // 𑀩 ba
+    { c: '\uD804\uDC2A' },  // 𑀪 bha
+    { c: '\uD804\uDC2B' },  // 𑀫 ma
+  ]},
+  { label: 'Other Consonants', keys: [
+    { c: '\uD804\uDC2C' },  // 𑀬 ya
+    { c: '\uD804\uDC2D' },  // 𑀭 ra
+    { c: '\uD804\uDC2E' },  // 𑀮 la
+    { c: '\uD804\uDC2F' },  // 𑀯 va
+    { c: '\uD804\uDC30' },  // 𑀰 śa
+    { c: '\uD804\uDC31' },  // 𑀱 ṣa
+    { c: '\uD804\uDC32' },  // 𑀲 sa
+    { c: '\uD804\uDC33' },  // 𑀳 ha
+  ]},
+  { label: 'Liquid & Rare', keys: [
+    { c: '\uD804\uDC34' },  // 𑀴 ḷa
+    { c: '\uD804\uDC35' },  // 𑀵 ḷha
+    { c: '\uD804\uDC36' },  // 𑀶 ṛa
+    { c: '\uD804\uDC37' },  // 𑀷 ṛha
+  ]},
+  { label: 'Diacritics & Signs', keys: [
+    { c: '\uD804\uDC00' },  // 𑀀 length mark
+    { c: '\uD804\uDC01' },  // 𑀁 anusvara
+    { c: '\uD804\uDC02' },  // 𑀂 visarga
+    { c: '\uD804\uDC03' },  // 𑀃 candrabindu
+    { c: '\uD804\uDC3F' },  // 𑀿 virama (halant)
+  ]},
+];
+
+// ── Build keyboard ───────────────────────────────────────────────
+const kb = document.getElementById('keyboard');
+
+ROWS.forEach(rowData => {
+  const label = document.createElement('div');
+  label.className = 'row-label';
+  label.textContent = rowData.label;
+  kb.appendChild(label);
+
+  const row = document.createElement('div');
+  row.className = 'row';
+  rowData.keys.forEach(k => {
+    const btn = document.createElement('button');
+    btn.className = 'key';
+    btn.textContent = k.c;
+    btn.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      btn.classList.add('pressed');
+      typeChar(k.c);
+    });
+    btn.addEventListener('pointerup', () => btn.classList.remove('pressed'));
+    btn.addEventListener('pointerleave', () => btn.classList.remove('pressed'));
+    // Touch-safe click for mobile
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      // Already handled by pointerdown; this prevents dupes
+    });
+    row.appendChild(btn);
+  });
+  kb.appendChild(row);
+});
+
+// ── Control row (built separately) ────────────────────────────────
+const controlLabel = document.createElement('div');
+controlLabel.className = 'row-label';
+controlLabel.textContent = 'Controls';
+kb.appendChild(controlLabel);
+
+const controlRow = document.createElement('div');
+controlRow.className = 'row';
+
+const backBtn = document.createElement('button');
+backBtn.className = 'key backspace';
+backBtn.textContent = '⌫';
+backBtn.addEventListener('click', e => { e.preventDefault(); backspace(); });
+controlRow.appendChild(backBtn);
+
+const spaceBtn = document.createElement('button');
+spaceBtn.className = 'key space';
+spaceBtn.textContent = '␣ space';
+spaceBtn.addEventListener('click', e => { e.preventDefault(); typeChar(' '); });
+controlRow.appendChild(spaceBtn);
+
+// Newline
+const nlBtn = document.createElement('button');
+nlBtn.className = 'key special';
+nlBtn.textContent = '↲ ↵';
+nlBtn.addEventListener('click', e => { e.preventDefault(); typeChar('\n'); });
+controlRow.appendChild(nlBtn);
+
+kb.appendChild(controlRow);
+
+// ── Text buffer & history ─────────────────────────────────────────
+const textarea = document.getElementById('textOut');
+let history = [];
+
+function typeChar(c) {
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const before = textarea.value.substring(0, start);
+  const after = textarea.value.substring(end);
+  history.push({ pos: start, len: end - start, val: textarea.value });
+  textarea.value = before + c + after;
+  const newPos = start + c.length;
+  textarea.selectionStart = textarea.selectionEnd = newPos;
+  textarea.focus();
+}
+
+function backspace() {
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  if (start !== end) {
+    // Delete selection
+    history.push({ pos: start, len: end - start, val: textarea.value });
+    textarea.value = textarea.value.substring(0, start) + textarea.value.substring(end);
+    textarea.selectionStart = textarea.selectionEnd = start;
+  } else if (start > 0) {
+    const cp = start - 1;
+    history.push({ pos: cp, len: 1, val: textarea.value });
+    textarea.value = textarea.value.substring(0, cp) + textarea.value.substring(start);
+    textarea.selectionStart = textarea.selectionEnd = cp;
+  }
+  textarea.focus();
+}
+
+function clearText() {
+  if (!textarea.value) return;
+  history.push({ pos: 0, len: textarea.value.length, val: textarea.value });
+  textarea.value = '';
+  textarea.focus();
+}
+
+function undoLast() {
+  const entry = history.pop();
+  if (entry) {
+    textarea.value = entry.val;
+    textarea.selectionStart = textarea.selectionEnd = entry.pos;
+    textarea.focus();
+  }
+}
+
+async function copyText() {
+  const text = textarea.value;
+  if (!text) { showToast('Nothing to copy'); return; }
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('✓ Copied to clipboard');
+  } catch {
+    // Fallback
+    textarea.select();
+    document.execCommand('copy');
+    showToast('✓ Copied');
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._hide);
+  t._hide = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// ── Keyboard shortcuts ────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { textarea.focus(); e.preventDefault(); }
+});
+</script>
+</body>
+</html>
