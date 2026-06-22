@@ -19,21 +19,38 @@
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #0f0f14;
-    --surface: #1a1a24;
-    --key: #26263a;
-    --key-hover: #34345a;
-    --key-active: #4a4a7a;
-    --accent: #a78bfa;
-    --accent-dim: #7c6bc4;
-    --text: #e4e4ec;
-    --text-dim: #8888a0;
-    --textarea-bg: #14141e;
+    /* Rosé Pine (dark) */
+    --bg: #191724;
+    --surface: #1f1d2e;
+    --key: #26233a;
+    --key-hover: #403d52;
+    --key-active: #524f67;
+    --accent: #c4a7e7;
+    --accent-dim: #9ccfd8;
+    --text: #e0def4;
+    --text-dim: #908caa;
+    --textarea-bg: #21202e;
+    --border: #2e2e44;
     --radius: 10px;
     --key-radius: 8px;
     --key-gap: 4px;
     --font-stack: 'Segoe UI', -apple-system, system-ui, sans-serif;
     --script-font: 'Noto Sans Brahmi', 'Segoe UI Historic', 'Arial Unicode MS', 'FreeSerif', serif;
+  }
+
+  [data-theme="light"] {
+    /* Rosé Pine Dawn */
+    --bg: #faf4ed;
+    --surface: #fffaf3;
+    --key: #f2e9de;
+    --key-hover: #dfdad9;
+    --key-active: #cecacd;
+    --accent: #907aa9;
+    --accent-dim: #56949f;
+    --text: #575279;
+    --text-dim: #797593;
+    --textarea-bg: #f4ede8;
+    --border: #e2dcd3;
   }
   body {
     background: var(--bg);
@@ -54,8 +71,12 @@
 
   /* Header */
   header {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     margin: 12px 0 16px;
+    position: relative;
   }
   header h1 {
     font-size: 1.3rem;
@@ -68,11 +89,29 @@
     color: var(--text-dim);
     margin-top: 2px;
   }
+  header .theme-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 1rem;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    line-height: 1;
+    transition: all 0.15s;
+  }
+  header .theme-btn:hover {
+    background: var(--key-hover);
+    color: var(--text);
+  }
 
   /* Text area */
   .output-area {
     background: var(--textarea-bg);
-    border: 1px solid #2a2a3e;
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 14px 16px;
     min-height: 90px;
@@ -241,8 +280,9 @@
 <div class="container">
   <header>
     <h1>Brahmi Virtual Input</h1>
-    <p>A virtual keyboard for the Brahmi script. Your device doesn't have one — now it does. Tap keys, copy text, use anywhere. No install, no OS changes.</p>
+    <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
   </header>
+  <p style="text-align:center;font-size:0.8rem;color:var(--text-dim);margin:-8px 0 16px">A virtual keyboard for the Brahmi script. Your device doesn't have one — now it does. Tap keys, copy text, use anywhere. No install, no OS changes.</p>
 
   <!-- Output -->
   <div class="output-area">
@@ -544,9 +584,28 @@ function showToast(msg) {
   t._hide = setTimeout(() => t.classList.remove('show'), 1800);
 }
 
+// ── Theme toggle ──────────────────────────────────────────────────
+(function initTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('brahmi-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  const theme = saved || (prefersDark ? 'dark' : 'light');
+  html.setAttribute('data-theme', theme === 'dark' ? '' : 'light');
+  btn.textContent = theme === 'dark' ? '🌙' : '☀️';
+
+  btn.addEventListener('click', () => {
+    const isDark = !html.getAttribute('data-theme');
+    html.setAttribute('data-theme', isDark ? '' : 'light');
+    btn.textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('brahmi-theme', isDark ? 'dark' : 'light');
+  });
+})();
+
 // ── Keyboard shortcuts ────────────────────────────────────────────
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { textarea.focus(); e.preventDefault(); }
+  if (e.key === 'Escape') { e.preventDefault(); }
 });
 </script>
 </body>
