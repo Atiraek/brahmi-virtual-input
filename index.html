@@ -212,28 +212,6 @@
     background: var(--key-active);
     transform: scale(0.93);
   }
-  .key.special {
-    font-family: var(--font-stack);
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    background: #1e1e2e;
-  }
-  .key.special:hover { background: var(--key-hover); }
-  .key.special:active { background: var(--key-active); }
-  .key.space {
-    flex: 3;
-    font-family: var(--font-stack);
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-  .key.backspace {
-    min-width: 56px;
-    font-family: var(--font-stack);
-    font-size: 0.7rem;
-    color: #f87171;
-  }
 
   /* Row labels */
   .row-label {
@@ -249,7 +227,6 @@
   @media (max-width: 500px) {
     body { padding: 10px 10px 20px; }
     .key { font-size: 1.1rem; min-width: 34px; padding: 9px 0; }
-    .key.special, .key.backspace { font-size: 0.7rem; }
     .output-area textarea { font-size: 1.2rem; }
     .row-label { font-size: 0.55rem; }
   }
@@ -258,7 +235,6 @@
   }
   @media (min-width: 600px) {
     .key { font-size: 1.5rem; min-width: 50px; padding: 12px 0; }
-    .key.special { font-size: 0.85rem; }
     .output-area textarea { font-size: 1.7rem; }
   }
   @media (min-width: 900px) {
@@ -471,9 +447,12 @@
     <textarea id="textOut" placeholder="Type in Brahmi..." spellcheck="false" dir="ltr" readonly inputmode="none"></textarea>
     <div class="toolbar">
       <button onclick="clearText()">✕ Clear</button>
-      <button class="copy-btn" onclick="copyText()">📋 Copy</button>
-      <span style="flex:1"></span>
       <button onclick="undoLast()">↩ Undo</button>
+      <button onclick="backspace()">⌫</button>
+      <span style="flex:1"></span>
+      <button onclick="typeChar(' ')">␣ space</button>
+      <button onclick="typeChar('\n')">↲</button>
+      <button class="copy-btn" onclick="copyText()">📋 Copy</button>
     </div>
   </div>
 
@@ -701,36 +680,6 @@ ROWS.forEach(rowData => {
   });
   kb.appendChild(row);
 });
-
-// ── Control row (built separately) ────────────────────────────────
-const controlLabel = document.createElement('div');
-controlLabel.className = 'row-label';
-controlLabel.textContent = 'Controls';
-kb.appendChild(controlLabel);
-
-const controlRow = document.createElement('div');
-controlRow.className = 'row';
-
-const backBtn = document.createElement('button');
-backBtn.className = 'key backspace';
-backBtn.textContent = '⌫';
-backBtn.addEventListener('click', e => { e.preventDefault(); backspace(); });
-controlRow.appendChild(backBtn);
-
-const spaceBtn = document.createElement('button');
-spaceBtn.className = 'key space';
-spaceBtn.textContent = '␣ space';
-spaceBtn.addEventListener('click', e => { e.preventDefault(); typeChar(' '); });
-controlRow.appendChild(spaceBtn);
-
-// Newline
-const nlBtn = document.createElement('button');
-nlBtn.className = 'key special';
-nlBtn.textContent = '↲ ↵';
-nlBtn.addEventListener('click', e => { e.preventDefault(); typeChar('\n'); });
-controlRow.appendChild(nlBtn);
-
-kb.appendChild(controlRow);
 
 // ── Text buffer & history ─────────────────────────────────────────
 const textarea = document.getElementById('textOut');
