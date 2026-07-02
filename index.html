@@ -667,15 +667,21 @@ ROWS.forEach(rowData => {
     btn.addEventListener('pointerdown', e => {
       e.preventDefault();
       btn.classList.add('pressed');
-      typeChar(k.c);
+      btn._downX = e.clientX;
+      btn._downY = e.clientY;
+      btn.setPointerCapture(e.pointerId);
     });
-    btn.addEventListener('pointerup', () => btn.classList.remove('pressed'));
+    btn.addEventListener('pointerup', e => {
+      btn.classList.remove('pressed');
+      const dx = e.clientX - (btn._downX || 0);
+      const dy = e.clientY - (btn._downY || 0);
+      // Only type if finger stayed within 5px — a tap, not a scroll
+      if (Math.abs(dx) < 5 && Math.abs(dy) < 5) {
+        typeChar(k.c);
+      }
+    });
     btn.addEventListener('pointerleave', () => btn.classList.remove('pressed'));
-    // Touch-safe click for mobile
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      // Already handled by pointerdown; this prevents dupes
-    });
+    btn.addEventListener('pointercancel', () => btn.classList.remove('pressed'));
     row.appendChild(btn);
   });
   kb.appendChild(row);
