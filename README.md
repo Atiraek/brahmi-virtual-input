@@ -20,14 +20,30 @@ Or just open `index.html` directly in any browser — it works offline.
 
 ## How to Use
 
+### Tap input (on-screen keyboard)
 1. **Tap a key** — the character appears in the text box above.
 2. **Compose freely** — tap vowels, consonants, vowel signs, diacritics, digits, or punctuation in any order.
-3. **Copy** — tap the **📋 Copy** button to copy your text to clipboard.
+3. **Copy** — tap **📋 Copy** to copy your text to clipboard.
 4. **Undo** — tap **↩ Undo** to step back through your edit history.
 5. **Clear** — tap **✕ Clear** to start fresh.
 6. **Backspace** — the **⌫** key deletes the last character (or selected text).
 
-The text box is read-only to prevent your device's on-screen keyboard from popping up — all input happens through the virtual keys.
+The text box is read-only to prevent your device's on-screen keyboard from popping up — all tap input happens through the virtual keys.
+
+### Phonetic input (IAST transliteration)
+Tap the **⌨️ Phonetic Input** callout between the output area and the keyboard to open the bottom sheet:
+- **Type IAST** (e.g. `namaḥ`) in the Latin input field — your device's native keyboard pops up.
+- **Live preview** shows the Brahmi transliteration updating character-by-character.
+- **Press Enter** or tap **Insert** to commit the Brahmi text at cursor in the output area.
+- **Reference table** below the input shows the IAST-to-Brahmi mapping (vowels, consonants, diacritics).
+
+The transliteration engine handles abugida rules automatically:
+- Word-initial vowels → independent letter forms
+- Post-consonant vowels → vowel signs (inherent *a* is implicit)
+- Consecutive consonants → virama (halant) inserted between them
+- IAST diacritics (`ā`, `ī`, `ū`, `ṛ`, `ṃ`, `ḥ`, `ś`, `ṣ`, `ṭ`, `ḍ`, `ṇ`, `ñ`, `ṅ`, `ḷ`) are fully supported
+
+Both input modes (tap keys + phonetic typing) write to the same output buffer — you can switch freely.
 
 ### Pro tip
 Brahmi is an **abugida**: each consonant carries an inherent vowel /a/. To suppress it, tap **virama** (𑁆, U+11046) after a consonant. To add a different vowel, tap a **vowel sign** after the consonant.
@@ -99,14 +115,33 @@ Single `index.html` with embedded CSS and JS — no framework, no bundler, no de
 // Characters use JavaScript surrogate pairs for SMP Unicode codepoints.
 ```
 
+Key modules in the script:
+- **`ROWS`** — keyboard layout data (varga groups)
+- **`BRAHMI`** — IAST-to-Brahmi mapping tables (vowels, consonants, diacritics)
+- **`transliterate()`** — state-machine transliteration engine with abugida awareness
+- **`initSheet()`** — bottom sheet UI (open/close, Enter commit, live preview)
+
+---
+
+## Features
+
+- ✅ Direct tap keyboard with all Brahmi Unicode characters
+- ✅ IAST phonetic transliteration via bottom sheet
+- ✅ Dark / light theme (Rosé Pine / Rosé Pine Dawn)
+- ✅ Auto-detects OS colour scheme preference
+- ✅ Manual theme toggle with localStorage persistence
+- ✅ Hybrid input — switch freely between tapping and typing
+- ✅ Edit history with undo
+- ✅ Clipboard copy with toast feedback
+- ✅ Mobile responsive (down to 320px width)
+- ✅ Zero dependencies — works fully offline
+
 ---
 
 ## Planned
 
-- **v2** — Phonetic transliteration (type "namaha" → "𑀦𑀫𑀂")
-- **Layout switching** — Toggle between varga groups and a compact layout
-- **Dark/light theme toggle**
-- **Mobile long-press** for diacritic variants
+- **Backspace & Enter refinement** — Latin input edit handling
+- **Mobile long-press** for diacritic variants on the tap keyboard
 
 ---
 
